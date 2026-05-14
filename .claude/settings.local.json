@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "PowerShell(ls -Force \"c:\\\\Users\\\\daka\\\\vscode\\\\learn\\\\Foundry-in-a-Day-Developer-Edition\" | % { $_.Name })",
-      "PowerShell(ls \"c:\\\\Users\\\\daka\\\\vscode\\\\learn\" | ? { $_.PSIsContainer } | % { $_.Name })",
-      "PowerShell(ls \"c:\\\\Users\\\\daka\\\\vscode\\\\learn\\\\aifoundry-basic\" | Where-Object { $_.Name -ne \"venv\" })"
-    ]
-  }
-}
