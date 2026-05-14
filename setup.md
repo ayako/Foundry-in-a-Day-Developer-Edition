@@ -26,6 +26,8 @@
 - ロール: **Contributor** 以上 (Hosted Agent デプロイには **Owner** または **User Access Administrator** 推奨)
 - リージョン: **North Central US** (Hosted Agent の現状の制約)
 
+- 5/18 のワークショップでは Microsoft が提供する環境での作業も可能です。本環境へのサインイン情報と手順については部屋で共有している別PPT資料をご参照ください。
+
 ### 1.2 GitHub アカウント (任意)
 
 - 本リポジトリを fork / clone するため
