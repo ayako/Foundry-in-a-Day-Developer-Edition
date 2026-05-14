@@ -1,0 +1,9 @@
+[project]
+name = "foundry-in-a-day"
+version = "0.1.0"
+description = "Foundry-in-a-Day Developer Edition — Workshop repository skeleton"
+requires-python = ">=3.11"
+dependencies = []
+
+[tool.uv]
+# Lab ごとの依存は labs/labN-*/src/ 配下で個別に追加してください
