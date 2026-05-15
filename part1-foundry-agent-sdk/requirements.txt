@@ -1,0 +1,9 @@
+# Foundry Agent SDK & Microsoft Agent Framework
+agent-framework>=1.2.2
+agent-framework-foundry-hosting==1.0.0a260507
+azure-ai-projects>=2.0.0a20250915020
+azure-identity
+python-dotenv
+openai
+pydantic
+mcp>=1.24.0,<2
