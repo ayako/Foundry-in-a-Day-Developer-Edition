@@ -1,0 +1,24 @@
+# 機密や開発成果物をコンテナイメージに焼き込まないようにする
+# (azd deploy → docker build の際に参照される)
+.env
+.env.*
+!.env.example
+.venv/
+venv/
+.azure/
+.git/
+.gitignore
+.vscode/
+.idea/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.DS_Store
+Thumbs.db
+
+# ローカル動作確認用 (Hosted Agent コンテナでは使わない)
+local.py
