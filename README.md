@@ -47,10 +47,9 @@ Microsoft の AI エージェント 開発・運用プラットフォーム **Mi
 | 時刻 | セッション |
 |---|---|
 | 14:00 - 14:20 | Microsoft Foundry 最新情報 |
-| 14:20 - 15:30 | SDK / CLI で開発するエージェント (**[Lab 1](labs/lab1-sdk-cli/README.md)**) |
-| 15:30 - 16:40 | Microsoft Agent Framework を触ってみよう (**[Lab 2](labs/lab2-agent-framework/README.md)**) |
-| 16:40 - 18:00 | Hosted Agent へのデプロイ (**[Lab 3](labs/lab3-hosted-agent-deploy/README.md)**) |
-| 18:00 | 作ったエージェントの評価 (**[Lab 4](labs/lab4-evaluation/README.md)**) |
+| 14:20 - 15:30 | SDK / CLI で開発するエージェント (**[Lab 1/2](labs/lab1-sdk-cli/README.md)**) |
+| 15:30 - 16:40 | Hosted Agent へのデプロイ (**[Lab 3](labs/lab3-hosted-agent-deploy/README.md)**) |
+| 16:40 - 18:00 | 作ったエージェントの評価 (**[Lab 4](labs/lab4-evaluation/README.md)**) |
 
 > ※ プログラムの内容はやむを得ず変更する場合がございます。あらかじめご了承ください。
 
