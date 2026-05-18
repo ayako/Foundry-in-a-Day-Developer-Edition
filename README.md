@@ -48,10 +48,9 @@ Microsoft の AI エージェント 開発・運用プラットフォーム **Mi
 |---|---|
 | 14:00 | Microsoft Foundry 最新情報 |
 | – | 本日作るエージェントのお題発表 |
-| – | SDK / CLI で開発するエージェント (**[Lab 1](labs/lab1-sdk-cli/README.md)**) |
-| – | Microsoft Agent Framework を触ってみよう (**[Lab 2](labs/lab2-agent-framework/README.md)**) |
-| – | Hosted Agent へのデプロイ (**[Lab 3](labs/lab3-hosted-agent-deploy/README.md)**) |
-| 18:00 | 作ったエージェントの評価 (**[Lab 4](labs/lab4-evaluation/README.md)**) |
+| – | Build Agents with Foundry SDK & Microsoft Agent Framework (**[Lab 1](labs/lab1-sdk-and-agent-framework/README.md)**) |
+| – | Hosted Agent へのデプロイ (**[Lab 2](labs/lab2-hosted-agent-deploy/README.md)**) |
+| 18:00 | 作ったエージェントの評価 (**[Lab 3](labs/lab3-evaluation/README.md)**) |
 
 > ※ プログラムの内容はやむを得ず変更する場合がございます。あらかじめご了承ください。
 
@@ -77,10 +76,9 @@ Microsoft の AI エージェント 開発・運用プラットフォーム **Mi
 
 | # | タイトル | 所要 |
 |---|---|---|
-| 1 | [SDK / CLI で開発するエージェント](labs/lab1-sdk-cli/README.md) | 〜45分 |
-| 2 | [Microsoft Agent Framework を触ってみよう](labs/lab2-agent-framework/README.md) | 〜60分 |
-| 3 | [Hosted Agent へのデプロイ](labs/lab3-hosted-agent-deploy/README.md) | 〜45分 |
-| 4 | [作ったエージェントの評価](labs/lab4-evaluation/README.md) | 〜45分 |
+| 1 | [Build Agents with Foundry SDK & Microsoft Agent Framework](labs/lab1-sdk-and-agent-framework/README.md) | 〜105分 |
+| 2 | [Hosted Agent へのデプロイ](labs/lab2-hosted-agent-deploy/README.md) | 〜45分 |
+| 3 | [作ったエージェントの評価](labs/lab3-evaluation/README.md) | 〜45分 |
 
 詳細は **[labs/README.md](labs/README.md)** を参照してください。
 
@@ -88,7 +86,7 @@ Microsoft の AI エージェント 開発・運用プラットフォーム **Mi
 
 ## 🏁 完了条件
 
-- [ ] Lab 1 〜 4 をすべて完走
+- [ ] Lab 1 〜 3 をすべて完走
 - [ ] 自分の Hosted Agent が Foundry ポータルから呼び出せる
 - [ ] 評価結果がポータルに表示される
 

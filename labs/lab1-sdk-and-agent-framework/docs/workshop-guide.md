@@ -120,19 +120,23 @@ az cognitiveservices account create `
   --yes
 ```
 
-### 0.4 Foundry プロジェクトの作成
+### 0.4 Foundry プロジェクトの作成 (Azure AI Foundry ポータルから作成)
 
-> ⚠️ `az ai` コマンドは拡張機能を動的インストールする必要があります。**初回のみ** 以下を実行してください:
-> ```powershell
-> az config set extension.dynamic_install_allow_preview=true
-> ```
+#### 手順
 
-```powershell
-az ai project create `
-  --name $PROJECT_NAME `
-  --resource-group $RESOURCE_GROUP `
-  --ai-resource $AI_SERVICES_NAME
-```
+1. ブラウザで [Azure AI Foundry ポータル](https://ai.azure.com/) を開く
+2. 右上の **アカウント / ディレクトリ** が `0.7` で確認するテナントと一致していることを確認
+3. ホーム画面右上 (または左ペイン) の **「+ 新しいプロジェクトの作成」** をクリック
+4. **プロジェクト名**: `zava-support` (= 演習 0.1 の `$PROJECT_NAME` と同じ値)
+5. **Foundry リソース (Hub / AI Services)**: 「既存のリソースを使用」を選び、演習 0.3 で作成した `$AI_SERVICES_NAME` (例: `ai-foundry-workshop-xxxx`) を選択
+   - 一覧に出ない場合は、サブスクリプション・リソースグループ (`rg-foundry-workshop`) のフィルタを確認
+6. **作成** をクリックし、プロビジョニング完了を待つ (1〜2 分)
+
+**✅ 成功確認:**
+- プロジェクト概要ページが表示される
+- ページ上部または「概要」内に **Project endpoint** (`https://<account>.services.ai.azure.com/api/projects/<project>`) が表示される
+
+> ⚠️ この **Project endpoint** は演習 0.7 / 1.3 で使うので、控えておいてください。
 
 ### 0.5 モデルのデプロイ
 
@@ -184,16 +188,23 @@ az role assignment create `
 
 ### 0.7 エンドポイントとテナント ID の確認
 
+#### プロジェクトエンドポイント (Foundry ポータルから取得)
+
+1. [Azure AI Foundry ポータル](https://ai.azure.com/) で `zava-support` プロジェクトを開く
+2. 左ペインの **「概要」** ( または右上のプロジェクト情報パネル) を開く
+3. **Project endpoint** をコピー
+   - 形式: `https://<account>.services.ai.azure.com/api/projects/<project>`
+
+PowerShell の変数にも入れておくと後で便利です:
+
 ```powershell
-# プロジェクトエンドポイントの取得
-$PROJECT_ENDPOINT = az ai project show `
-  --name $PROJECT_NAME `
-  --resource-group $RESOURCE_GROUP `
-  --query "properties.endpoint" -o tsv
-
+$PROJECT_ENDPOINT = "<ポータルでコピーしたエンドポイント>"
 Write-Host "Project Endpoint: $PROJECT_ENDPOINT"
+```
 
-# テナント ID の取得
+#### テナント ID の取得
+
+```powershell
 $TENANT_ID = az account show --query tenantId -o tsv
 Write-Host "Tenant ID: $TENANT_ID"
 ```
@@ -218,7 +229,7 @@ Tenant ID: 16b3c013-d300-468d-ac64-7eda0820b6d3
 リポジトリのルートディレクトリ（`Foundry-in-a-day-3/`）から実行してください:
 
 ```powershell
-cd labs/lab1-sdk-cli
+cd labs/lab1-sdk-and-agent-framework
 python -m venv .venv
 
 # Windows
@@ -589,18 +600,11 @@ Get-NetTCPConnection -LocalPort 8088 | ForEach-Object { Stop-Process -Id $_.Owni
 python src/agent_x/main.py
 ```
 
-### エラー: `az ai project create` が失敗する
+### エラー: `az ai project create` で `'ai' is misspelled or not recognized by the system.`
 
-**原因**: `az ai` 拡張機能がインストールされていない。
+**原因**: `az ai` 拡張機能が現時点 (2026/05) では公開停止 / 動的インストール対象外となっており、`az config set extension.dynamic_install_allow_preview=true` を実行しても解消しません。
 
-**解決方法**:
-```powershell
-# 動的インストールを有効化
-az config set extension.dynamic_install_allow_preview=true
-
-# 再実行
-az ai project create --name $PROJECT_NAME --resource-group $RESOURCE_GROUP --ai-resource $AI_SERVICES_NAME
-```
+**解決方法**: CLI ではなく [Azure AI Foundry ポータル](https://ai.azure.com/) からプロジェクトを作成してください。手順は [演習 0.4](#04-foundry-プロジェクトの作成-azure-ai-foundry-ポータルから作成) を参照。
 
 ### エラー: `ModuleNotFoundError: No module named 'agent_framework'`
 
