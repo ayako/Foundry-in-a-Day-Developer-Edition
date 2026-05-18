@@ -2,7 +2,7 @@
 
 ワークショップ本編の Lab です。**上から順に** 進めてください。
 
-| # | タイトル | 所要 | 担当 | リンク |
+| # | タイトル | 担当 | リンク |
 |---|---|---|---|---|
 | 1 | Build Agents with Foundry SDK & Microsoft Agent Framework | 草野 | [lab1-sdk-and-agent-framework](lab1-sdk-and-agent-framework/README.md) |
 | 2 | Hosted Agent へのデプロイ | 畑崎 | [lab2-hosted-agent-deploy](lab2-hosted-agent-deploy/README.md) |
