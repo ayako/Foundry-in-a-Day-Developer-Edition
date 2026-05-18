@@ -271,6 +271,9 @@ python local.py
 #### Windows (PowerShell)
 
 ```powershell
+# 0. Lab2 のルートディレクトリに移動
+cd ..
+
 # 1. azd にサインイン (初回のみ / セッションが切れたとき)
 azd auth login
 
@@ -284,6 +287,9 @@ azd up
 #### Linux / macOS (bash)
 
 ```bash
+# 0. Lab2 のルートディレクトリに移動
+cd ..
+
 # 1. azd にサインイン (初回のみ / セッションが切れたとき)
 azd auth login
 
