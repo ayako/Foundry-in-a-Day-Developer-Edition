@@ -71,19 +71,6 @@ Microsoft の AI エージェント 開発・運用プラットフォーム **Mi
 
 ---
 
-## 🧪 Lab 一覧
-
-| # | タイトル | 所要 |
-|---|---|---|
-| 1 | [SDK / CLI で開発するエージェント](labs/lab1-sdk-cli/README.md) | 〜45分 |
-| 2 | [Microsoft Agent Framework を触ってみよう](labs/lab2-agent-framework/README.md) | 〜60分 |
-| 3 | [Hosted Agent へのデプロイ](labs/lab3-hosted-agent-deploy/README.md) | 〜45分 |
-| 4 | [作ったエージェントの評価](labs/lab4-evaluation/README.md) | 〜45分 |
-
-詳細は **[labs/README.md](labs/README.md)** を参照してください。
-
----
-
 ## 🏁 完了条件
 
 - [ ] Lab 1 〜 4 をすべて完走
