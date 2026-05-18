@@ -111,4 +111,4 @@ Microsoft の AI エージェント 開発・運用プラットフォーム **Mi
 
 ## 👨‍🏫 講師・TA の方へ
 
-進行ガイドは **[instructor-guide.md](instructor-guide.md)** にあります。
+講師向けメモは **[instructor/](instructor/)** ディレクトリにあります。

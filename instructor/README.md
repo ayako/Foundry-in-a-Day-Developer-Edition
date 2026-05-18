@@ -16,5 +16,4 @@
 
 ## 執筆者・講師へ
 
-- 進行ガイドの本体は [../instructor-guide.md](../instructor-guide.md) です
 - ここには「内部メモ」レベルの詳細を置いてください
