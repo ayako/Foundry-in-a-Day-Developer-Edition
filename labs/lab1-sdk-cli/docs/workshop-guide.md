@@ -218,7 +218,7 @@ Tenant ID: 16b3c013-d300-468d-ac64-7eda0820b6d3
 リポジトリのルートディレクトリ（`Foundry-in-a-day-3/`）から実行してください:
 
 ```powershell
-cd part1-foundry-agent-sdk
+cd labs/lab1-sdk-cli
 python -m venv .venv
 
 # Windows
