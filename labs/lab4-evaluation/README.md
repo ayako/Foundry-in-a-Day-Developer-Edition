@@ -37,7 +37,7 @@
 
 開始前に次が完了していること:
 
-- [ ] [Lab 3](../lab3-hosted-agent-deploy/README.md) を完了している
+- [ ] [Lab 3](../lab3-hosted-agent-deploy/README.md) を完了している　(この Lab は独立しているため必須ではない)
 - [ ] Foundry プロジェクトが作成済み
 - [ ] **VS Code** (Python / Jupyter 拡張機能) がインストール済み
 - [ ] `.env` に必要な環境変数 (後述) が設定されている
