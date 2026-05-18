@@ -4,10 +4,9 @@
 
 | # | タイトル | 所要 | 担当 | リンク |
 |---|---|---|---|---|
-| 1 | SDK / CLI で開発するエージェント | 〜45分 | TBD | [lab1-sdk-cli](lab1-sdk-cli/README.md) |
-| 2 | Microsoft Agent Framework を触ってみよう | 〜60分 | TBD | [lab2-agent-framework](lab2-agent-framework/README.md) |
-| 3 | Hosted Agent へのデプロイ | 〜45分 | TBD | [lab3-hosted-agent-deploy](lab3-hosted-agent-deploy/README.md) |
-| 4 | 作ったエージェントの評価 | 〜45分 | TBD | [lab4-evaluation](lab4-evaluation/README.md) |
+| 1 | Build Agents with Foundry SDK & Microsoft Agent Framework | 〜105分 | TBD | [lab1-sdk-and-agent-framework](lab1-sdk-and-agent-framework/README.md) |
+| 2 | Hosted Agent へのデプロイ | 〜45分 | TBD | [lab2-hosted-agent-deploy](lab2-hosted-agent-deploy/README.md) |
+| 3 | 作ったエージェントの評価 | 〜45分 | TBD | [lab3-evaluation](lab3-evaluation/README.md) |
 
 ---
 

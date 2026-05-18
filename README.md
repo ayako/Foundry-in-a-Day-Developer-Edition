@@ -71,9 +71,19 @@ Microsoft の AI エージェント 開発・運用プラットフォーム **Mi
 
 ---
 
+## 🧪 Lab 一覧
+
+| # | タイトル | 所要 |
+|---|---|---|
+| 1 | [Build Agents with Foundry SDK & Microsoft Agent Framework](labs/lab1-sdk-and-agent-framework/README.md) | 〜105分 |
+| 2 | [Hosted Agent へのデプロイ](labs/lab2-hosted-agent-deploy/README.md) | 〜45分 |
+| 3 | [作ったエージェントの評価](labs/lab3-evaluation/README.md) | 〜45分 |
+
+詳細は **[labs/README.md](labs/README.md)** を参照してください。
+
 ## 🏁 完了条件
 
-- [ ] Lab 1 〜 4 をすべて完走
+- [ ] Lab 1 〜 3 をすべて完走
 - [ ] 自分の Hosted Agent が Foundry ポータルから呼び出せる
 - [ ] 評価結果がポータルに表示される
 
@@ -98,4 +108,4 @@ Microsoft の AI エージェント 開発・運用プラットフォーム **Mi
 
 ## 👨‍🏫 講師・TA の方へ
 
-進行ガイドは **[instructor-guide.md](instructor-guide.md)** にあります。
+講師向けメモは **[instructor/](instructor/)** ディレクトリにあります。

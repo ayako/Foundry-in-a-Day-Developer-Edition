@@ -97,7 +97,7 @@ az role assignment create \
 VS Code を開いて、本ラボをオープンします (Windows / Linux / macOS 共通)。
 
 ```bash
-cd labs/lab3-hosted-agent-deploy
+cd labs/lab2-hosted-agent-deploy
 code .
 ```
 

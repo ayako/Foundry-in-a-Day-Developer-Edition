@@ -4,7 +4,7 @@
 
 ## 配置ルール
 
-- ディレクトリ構成は `labs/` に揃える: `solutions/lab1-sdk-cli/`, `solutions/lab2-agent-framework/`, ...
+- ディレクトリ構成は `labs/` に揃える: `solutions/lab1-sdk-and-agent-framework/`, `solutions/lab2-hosted-agent-deploy/`, `solutions/lab3-evaluation/`
 - Lab の `src/` に置くコードと **同じファイル名** で配置 (差分が一目でわかるように)
 - secret や個人の Foundry エンドポイントを含めないこと
 

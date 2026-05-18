@@ -22,8 +22,8 @@
 
 | 症状 | 想定原因 | 解決方法 | 出やすい Lab |
 |---|---|---|---|
-| `DefaultAzureCredential` が失敗 | `az` または `azd` の認証セッション切れ | `az login` / `azd auth login` を再実行 | Lab 1〜4 |
-| `AuthenticationError` | テナント / サブスクリプションの不一致 | `az account set --subscription <id>` で切替 | Lab 1〜4 |
+| `DefaultAzureCredential` が失敗 | `az` または `azd` の認証セッション切れ | `az login` / `azd auth login` を再実行 | Lab 1〜3 |
+| `AuthenticationError` | テナント / サブスクリプションの不一致 | `az account set --subscription <id>` で切替 | Lab 1〜3 |
 | | | | |
 
 ---
@@ -32,9 +32,9 @@
 
 | 症状 | 想定原因 | 解決方法 | 出やすい Lab |
 |---|---|---|---|
-| Hosted Agent デプロイで region エラー | Hosted Agent は **North Central US** のみ対応 (執筆時点) | `azd init` 時に `--location northcentralus` を指定 | Lab 3 |
-| `429 Too Many Requests` | モデルのレート制限 | しばらく待つ / モデルクォータを確認 | Lab 1〜4 |
-| `DeploymentNotFound` | モデルデプロイ名の不一致 | Foundry ポータル **Build → Deployments** で確認し `.env` を修正 | Lab 1〜4 |
+| Hosted Agent デプロイで region エラー | Hosted Agent は **North Central US** のみ対応 (執筆時点) | `azd init` 時に `--location northcentralus` を指定 | Lab 2 |
+| `429 Too Many Requests` | モデルのレート制限 | しばらく待つ / モデルクォータを確認 | Lab 1〜3 |
+| `DeploymentNotFound` | モデルデプロイ名の不一致 | Foundry ポータル **Build → Deployments** で確認し `.env` を修正 | Lab 1〜3 |
 | | | | |
 
 ---
@@ -63,7 +63,7 @@
 
 | 症状 | 想定原因 | 解決方法 | 出やすい Lab |
 |---|---|---|---|
-| Microsoft 365 Agents Toolkit でサンプルが見えない | 拡張バージョンが古い | 最新版に更新 → VS Code を再起動 | Lab 1〜2 |
+| Microsoft 365 Agents Toolkit でサンプルが見えない | 拡張バージョンが古い | 最新版に更新 → VS Code を再起動 | Lab 1 |
 | | | | |
 
 ---
