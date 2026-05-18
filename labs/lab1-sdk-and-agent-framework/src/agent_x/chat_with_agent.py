@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 PROJECT_ENDPOINT = os.environ["FOUNDRY_PROJECT_ENDPOINT"]
-AGENT_NAME = os.environ.get("AZURE_AI_FOUNDRY_AGENT_NAME", "zava-support-agent-x")
+AGENT_NAME = os.environ.get("MICROSOFT_FOUNDRY_AGENT_NAME", "zava-support-agent-x")
 TENANT_ID = os.environ.get("AZURE_TENANT_ID")
 
 

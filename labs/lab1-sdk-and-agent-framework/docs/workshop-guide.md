@@ -1,4 +1,7 @@
-﻿# Part 1: Foundry Agent を SDK/CLI で作る → MAF から呼び出す (70min)
+# Part 1: Foundry Agent を SDK/CLI で作る → MAF から呼び出す (70min)
+
+> ⚠️ **シェル環境について**: 本ワークショップのコマンド例は **PowerShell** 環境を前提としています。  
+> macOS / Linux (bash, zsh など) のユーザーは、変数定義 (`$VAR=...` → `VAR=...`) や行継続 (`` ` `` → `\`) などを各自の環境に合わせて書き換えて実行してください。
 
 ## 🎯 このパートのゴール
 
@@ -17,45 +20,6 @@
 | VS Code | Python 拡張機能インストール済み | 拡張機能パネルで確認 |
 | Azure サブスクリプション | 有効なサブスクリプション | `az account show` |
 | Azure CLI ログイン | 正しいテナントにログイン済み | 下記参照 |
-| Azure RBAC ロール | 下記ロールが付与済み | 下記参照 |
-
-### 必要な Azure RBAC ロール (IAM)
-
-このワークショップでは以下のロールが必要です:
-
-| ロール | スコープ | 用途 | 演習 |
-|--------|---------|------|------|
-| `Contributor` | サブスクリプション or リソースグループ | リソース作成 (RG, AI Services, Project, Model Deploy) | 演習 0 |
-| `Azure AI Developer` | AI Services リソース or プロジェクト | エージェント作成・呼び出し・モデル推論 | 演習 1〜3 |
-
-> 💡 **自分でリソースを作成する場合** (演習 0): サブスクリプションの `Contributor` があれば十分です。  
-> 作成したユーザーには自動的にアクセス権が付きます。
-
-> ⚠️ **他の人が作成したリソースを使う場合**: 管理者に依頼して、AI Services リソースまたはプロジェクトに  
-> `Azure AI Developer` ロールを付与してもらう必要があります。
-
-#### ロールの確認方法
-
-```powershell
-# 自分のロール割り当てを確認
-az role assignment list --assignee $(az ad signed-in-user show --query id -o tsv) --query "[].{Role:roleDefinitionName, Scope:scope}" -o table
-```
-
-#### ロールが不足している場合の付与方法 (管理者向け)
-
-```powershell
-# Azure AI Developer ロールを AI Services リソースに付与する例
-$USER_ID = az ad signed-in-user show --query id -o tsv
-$AI_RESOURCE_ID = az cognitiveservices account show --name <AI_SERVICES_NAME> --resource-group <RESOURCE_GROUP> --query id -o tsv
-
-az role assignment create `
-  --assignee $USER_ID `
-  --role "Azure AI Developer" `
-  --scope $AI_RESOURCE_ID
-```
-
-> 💡 **Azure Portal から付与する場合**:  
-> AI Services リソース → アクセス制御 (IAM) → ロールの割り当ての追加 → `Azure AI Developer` を検索 → 対象ユーザーを選択
 
 ### Azure CLI ログインの確認
 
@@ -108,115 +72,75 @@ $MODEL_DEPLOYMENT_NAME = "gpt-4.1-mini"
 az group create --name $RESOURCE_GROUP --location $LOCATION
 ```
 
-### 0.3 AI Services (Foundry リソース) の作成
-
-```powershell
-az cognitiveservices account create `
-  --name $AI_SERVICES_NAME `
-  --resource-group $RESOURCE_GROUP `
-  --location $LOCATION `
-  --kind AIServices `
-  --sku S0 `
-  --yes
-```
-
-### 0.4 Foundry プロジェクトの作成 (Azure AI Foundry ポータルから作成)
+### 0.3 Foundry リソースとプロジェクトの作成 (Azure Portal から作成)
+`az ai` 拡張機能が現状利用不可のため、Foundry リソース (AI Services) と プロジェクトは **Azure Portal** からまとめて作成します。
 
 #### 手順
 
-1. ブラウザで [Azure AI Foundry ポータル](https://ai.azure.com/) を開く
-2. 右上の **アカウント / ディレクトリ** が `0.7` で確認するテナントと一致していることを確認
-3. ホーム画面右上 (または左ペイン) の **「+ 新しいプロジェクトの作成」** をクリック
-4. **プロジェクト名**: `zava-support` (= 演習 0.1 の `$PROJECT_NAME` と同じ値)
-5. **Foundry リソース (Hub / AI Services)**: 「既存のリソースを使用」を選び、演習 0.3 で作成した `$AI_SERVICES_NAME` (例: `ai-foundry-workshop-xxxx`) を選択
-   - 一覧に出ない場合は、サブスクリプション・リソースグループ (`rg-foundry-workshop`) のフィルタを確認
-6. **作成** をクリックし、プロビジョニング完了を待つ (1〜2 分)
+1. ブラウザで [Azure Portal](https://portal.azure.com/) を開く
+2. 右上の **ディレクトリ** が `az account show` で確認したテナントと一致していることを確認
+3. 画面上部の **検索バー** に `Foundry` と入力し、サービス一覧の **「Microsoft Foundry」** をクリック
+4. **「+ 作成」** (Create) をクリック
+5. **「インスタンスの詳細」** で次のように入力:
+   - **サブスクリプション**: 利用するサブスクリプション
+   - **リソースグループ**: 演習 0.2 で作成した `rg-foundry-workshop`
+   - **リージョン**: `East US 2` (演習 0.1 の `$LOCATION` と合わせる)
+   - **名前 (リソース名)**: 演習 0.1 の `$AI_SERVICES_NAME` の値 (例: `ai-foundry-workshop-xxxx`) — グローバル一意
+6. **「プロジェクト」** セクションで **「プロジェクトを作成する」** にチェックを入れ、プロジェクト名に **`zava-support`** (= 演習 0.1 の `$PROJECT_NAME`) を入力 — Foundry リソースとプロジェクトを同時に作成します
+7. **「確認と作成」** → **「作成」** をクリックし、プロビジョニング完了を待つ (2〜3 分)
+
+![入力例](images/Foundry%20Creation.png)
 
 **✅ 成功確認:**
-- プロジェクト概要ページが表示される
-- ページ上部または「概要」内に **Project endpoint** (`https://<account>.services.ai.azure.com/api/projects/<project>`) が表示される
+- デプロイ完了後 **「リソースに移動」** をクリックし、Microsoft Foundry リソースの概要ページが開く
+- 概要ページ上部の **「Microsoft Foundry portal で開く」** リンクから `zava-support` プロジェクトを開ける
+- プロジェクトの Overview に **Microsoft Foundry project endpoint** (`https://<account>.services.ai.azure.com/api/projects/<project>`) が表示される
 
-> ⚠️ この **Project endpoint** は演習 0.7 / 1.3 で使うので、控えておいてください。
+> ⚠️ この **Project endpoint** は演習 0.5 / 1.3 で使うので、控えておいてください。
 
-### 0.5 モデルのデプロイ
+### 0.4 モデルのデプロイ (Microsoft Foundry ポータルから)
 
-```powershell
-az cognitiveservices account deployment create `
-  --name $AI_SERVICES_NAME `
-  --resource-group $RESOURCE_GROUP `
-  --deployment-name $MODEL_DEPLOYMENT_NAME `
-  --model-name "gpt-4.1-mini" `
-  --model-version "2025-04-14" `
-  --model-format OpenAI `
-  --sku-name "GlobalStandard" `
-  --sku-capacity 30
-```
+演習 0.3 で作成した `zava-support` プロジェクトに、本ワークショップで使用する `gpt-4.1-mini` モデルをデプロイします。
 
-### 0.6 RBAC ロールの付与
+#### 手順
 
-演習 1〜3 でエージェント作成・推論を行うには、`Azure AI Developer` ロールが必要です。
+1. [Microsoft Foundry ポータル](https://ai.azure.com/) を開き、`zava-support` プロジェクトを選択
+2. 上部メニューの **「ビルド」** をクリックし、左ナビゲーションから**「モデル」**)を開く
+3. **「 基本モデルをデプロイする」** をクリック
+4. モデル一覧から **`gpt-4.1-mini`** を選択し、**「確認」** をクリック
+5. **「デプロイ」** をクリックし、表示されたダイアログでは既定の設定 」 をクリックし、デプロイを実行
 
-```powershell
-# 自分のユーザー ID を取得
-$USER_ID = az ad signed-in-user show --query id -o tsv
+![デプロイの仕方](images/GPT-4.1-mini.png)
 
-# AI Services リソースの ID を取得
-$AI_RESOURCE_ID = az cognitiveservices account show `
-  --name $AI_SERVICES_NAME `
-  --resource-group $RESOURCE_GROUP `
-  --query id -o tsv
+**✅ 成功確認:**
+- デプロイ一覧に `gpt-4.1-mini` が **「成功」** ステータスで表示される
+- デプロイ名が演習 0.1 の `$MODEL_DEPLOYMENT_NAME` の値と一致している
 
-# Azure AI Developer ロールを付与
-az role assignment create `
-  --assignee $USER_ID `
-  --role "Azure AI Developer" `
-  --scope $AI_RESOURCE_ID
-```
-
-**✅ 期待される出力 (抜粋):**
-```json
-{
-  "roleDefinitionName": "Azure AI Developer",
-  "principalType": "User",
-  "scope": "/subscriptions/.../Microsoft.CognitiveServices/accounts/ai-foundry-workshop-..."
-}
-```
-
-> 💡 `--role "Azure AI Developer"` がこのワークショップのキーとなるロールです。  
-> これがないとエージェントの作成・呼び出し・モデル推論で `Forbidden` エラーになります。  
-> ⚠️ ロールの反映には **最大 5 分** かかる場合があります。エラーが出たら少し待ってリトライしてください。
-
-### 0.7 エンドポイントとテナント ID の確認
+### 0.5 エンドポイントとテナント ID の確認
 
 #### プロジェクトエンドポイント (Foundry ポータルから取得)
 
-1. [Azure AI Foundry ポータル](https://ai.azure.com/) で `zava-support` プロジェクトを開く
-2. 左ペインの **「概要」** ( または右上のプロジェクト情報パネル) を開く
-3. **Project endpoint** をコピー
+> 💡 演習 0.3 のプロビジョニング完了時に **Project endpoint** を控えてあれば、この手順はスキップして構いません。  
+> 控え忘れた場合のみ、以下の手順で再取得してください。
+
+1. New UI の [Microsoft Foundry ポータル](https://ai.azure.com/) で `zava-support` プロジェクトを開く
+2. プロジェクトの **「ホーム」** 画面を表示する
+3. **「プロジェクトエンドポイント」** 欄の右側にあるコピーボタンをクリックし、値をコピーする
    - 形式: `https://<account>.services.ai.azure.com/api/projects/<project>`
 
-PowerShell の変数にも入れておくと後で便利です:
+![プロジェクトエンドポイント](images/project-endpoint.png)
 
-```powershell
-$PROJECT_ENDPOINT = "<ポータルでコピーしたエンドポイント>"
-Write-Host "Project Endpoint: $PROJECT_ENDPOINT"
-```
+コピーした値はメモ帳などに控えておき、演習 1.3 で `.env` の `FOUNDRY_PROJECT_ENDPOINT` に貼り付けます。
 
 #### テナント ID の取得
 
+以下のコマンドで現在のテナント ID を確認します。出力された値も控えておき、演習 1.3 で `.env` の `AZURE_TENANT_ID` に貼り付けます。
+
 ```powershell
-$TENANT_ID = az account show --query tenantId -o tsv
-Write-Host "Tenant ID: $TENANT_ID"
+az account show --query tenantId -o tsv
 ```
 
-> 💡 取得した **エンドポイント** と **テナント ID** を次の演習で `.env` に設定します。  
-> メモ帳などに控えておいてください。
-
-**✅ 期待される出力例:**
-```
-Project Endpoint: https://ai-foundry-workshop-1234.services.ai.azure.com/api/projects/zava-support
-Tenant ID: 16b3c013-d300-468d-ac64-7eda0820b6d3
-```
+> 💡 アプリケーションは `.env` から値を読み込むため、ここでは PowerShell の環境変数に設定する必要はありません。値が分かれば次の演習に進めます。
 
 ---
 
@@ -243,23 +167,6 @@ pip install -r requirements.txt
 
 > ⚠️ `pip install` が完了するまで 1〜2 分かかります。エラーが出た場合は Python のバージョンを確認してください。
 
-### 1.2 ライブラリのパッチ適用
-
-現時点の `agent-framework-foundry-hosting` パッケージにはリクエスト処理のバグがあるため、パッチを適用します。
-
-```powershell
-python scripts/patch_responses.py
-```
-
-**✅ 期待される出力:**
-```
-パッチ対象: ...\agent_framework_foundry_hosting\_responses.py
-✅ パッチ適用完了!
-   空の ChatOptions がエージェントに渡されないように修正しました。
-```
-
-> 💡 既にパッチ適用済みの場合は「✅ パッチは既に適用済みです。」と表示されます。
-
 ### 1.3 環境変数の設定
 
 `.env.template` をコピーして `.env` を作成し、値を設定します。
@@ -271,16 +178,16 @@ Copy-Item .env.template .env
 `.env` を VS Code で開いて編集します:
 
 ```env
-# 演習 0.7 で取得したエンドポイント
+# 演習 0.5 で取得したエンドポイント
 FOUNDRY_PROJECT_ENDPOINT="https://<YOUR-RESOURCE-NAME>.services.ai.azure.com/api/projects/<YOUR-PROJECT-NAME>"
 
-# そのまま (演習 0.5 でデプロイしたモデル名)
+# そのまま (演習 0.4 でデプロイしたモデル名)
 AZURE_AI_MODEL_DEPLOYMENT_NAME="gpt-4.1-mini"
 
 # そのまま
-AZURE_AI_FOUNDRY_AGENT_NAME="zava-support-agent-x"
+MICROSOFT_FOUNDRY_AGENT_NAME="zava-support-agent-x"
 
-# 演習 0.7 で取得したテナント ID
+# 演習 0.5 で取得したテナント ID
 AZURE_TENANT_ID="<YOUR-TENANT-ID>"
 ```
 
@@ -453,85 +360,71 @@ $bytes = [System.Text.Encoding]::UTF8.GetBytes($body)
 
 > 💡 `status` が `"completed"` であれば成功です。`"failed"` の場合はトラブルシューティングを参照してください。
 
-**ストリーミングのテスト:**
-
-```powershell
-$body = '{"input": "FAQ: 返品について", "model": "gpt-4.1-mini", "stream": true}'
-$bytes = [System.Text.Encoding]::UTF8.GetBytes($body)
-(Invoke-WebRequest -Uri http://localhost:8088/responses -Method POST -ContentType "application/json" -Body $bytes -TimeoutSec 60).Content
-```
-
-SSE (Server-Sent Events) 形式でイベントが返ります。最後に `event: response.completed` が表示されれば成功です。
-
----
 
 ## 演習 3: MAF から Foundry Agent を呼び出す (10min)
 
-### 3.1 呼び出しパターン
+### 3.1 MAF から Foundry エージェントを呼ぶ ── `FoundryAgent`
 
-演習 1 で作成した Prompt Agent を、別の MAF エージェントから呼び出す方法:
+MAF (`agent_framework_foundry`) には、Foundry に登録済みの Prompt / Hosted エージェントを **名前で参照して直接呼び出すクラス** が用意されています:
 
 ```python
-from azure.ai.projects import AIProjectClient
-from azure.identity import AzureCliCredential
+from agent_framework_foundry import FoundryAgent
+from azure.identity.aio import AzureCliCredential
 
-project = AIProjectClient(
-    endpoint=PROJECT_ENDPOINT,
-    credential=AzureCliCredential(tenant_id=TENANT_ID),
-)
-openai = project.get_openai_client()
+async with AzureCliCredential(tenant_id=TENANT_ID) as credential:
+    agent = FoundryAgent(
+        project_endpoint=PROJECT_ENDPOINT,
+        agent_name="zava-support-agent-x",   # 演習 1.4 で作成した Prompt Agent
+        credential=credential,
+    )
 
-# 会話を開始
-conversation = openai.conversations.create()
-
-# Agent X を呼び出し
-response = openai.responses.create(
-    conversation=conversation.id,
-    extra_body={"agent_reference": {"name": "zava-support-agent-x", "type": "agent_reference"}},
-    input="顧客C001の注文履歴を検索して",
-)
-print(response.output_text)
+    session = agent.create_session()          # マルチターン用セッション
+    result = await agent.run("顧客ID C001 の最近の注文を教えてください", session=session)
+    print(result.text)
 ```
 
-**ポイント解説:**
-- `agent_reference` — Foundry に登録済みのエージェントを名前で指定して呼び出す仕組み
-- 呼び出し元は **エージェントのツール実装を知らなくても** 名前だけで利用できる
-- これにより、エージェント間の疎結合な連携が実現できる
+**ポイント:**
+- `FoundryAgent` は内部で **`agent_reference`** (Foundry に登録済みエージェントを名前で呼び出す仕組み) を自動付与する
+- 呼び出し元は「どのモデルを使っているか」「どんなツールを持っているか」を知らなくても、**エージェント名だけ** で利用できる
+- ローカルツールを追加したい場合は `tools=[...]` を渡せば、Foundry の Prompt Agent + ローカルツールという構成も可能
+- HostedAgent は `agent_version` 省略可、PromptAgent は通常 `agent_version` を指定する (省略時は最新)
 
-### 3.2 デモ: MAF Orchestrator からの呼び出し
+### 3.2 デモ: 実際に呼び出してみる
 
-`src/maf_orchestrator/call_agent_x.py` を実行:
+`src/agent_x/chat_with_agent_maf.py` を実行:
 
 ```powershell
-python src/maf_orchestrator/call_agent_x.py
+python src/agent_x/chat_with_agent_maf.py
 ```
 
 **✅ 期待される出力例:**
 ```
 ============================================================
-MAF Orchestrator → Agent X 呼び出しデモ
+MAF FoundryAgent → Foundry Prompt Agent (zava-support-agent-x)
 ============================================================
 
---- シナリオ 1: 注文履歴 ---
-Response: 申し訳ございませんが、顧客C001様の注文履歴を確認するには...
-Conversation ID: conv_xxxxx...
+--- ターン 1 ---
+📤 User : 顧客ID C001 の最近の注文を教えてください
+📥 Agent: ご連絡ありがとうございます。顧客ID C001様の直近のご注文は...
 
---- シナリオ 2: フォローアップ ---
-Response: ご注文の配送状況について...
+--- ターン 2 ---
+📤 User : その注文がまだ届いていないようなのですが、ステータスを確認できますか？
+📥 Agent: 配送業者のシステム上では、注文は…配達完了と記録されております...
 
---- シナリオ 3: FAQ ---
-Response: 返品のルールについてご案内いたします...
-
---- シナリオ 4: エスカレーション ---
-Response: ご連絡いただきありがとうございます。このたびは...
+--- ターン 3 ---
+📤 User : 返品ポリシーについても教えてください
+📥 Agent: 当社の返品ポリシーは以下の通りです...
 
 ============================================================
-✅ 全シナリオ完了
+✅ 全ターン完了
 ```
 
-> ⚠️ **注意**: Prompt Agent (演習 1 で作成) はツールを持たないため、「注文履歴を検索して」と依頼しても  
-> 実際にはデータベース検索は行わず、一般的な回答を返します。  
-> ツール付きの Agent X (演習 2) をホストした場合は、実際にツールが呼ばれます。
+> 💡 セッション (`agent.create_session()`) を共有しているため、ターン 2 で「その注文」と言及するだけで前回の文脈が引き継がれます。
+
+> ⚠️ **注意**: 演習 1.4 で作成した Prompt Agent はツールを持たないため、「注文履歴」と聞いても  
+> 実データを検索せずモデルが生成した内容を返します。実データを扱いたい場合は、  
+> 演習 2 でローカルホストしたツール付き Agent X を Foundry にデプロイし (Lab 2 で扱います)、  
+> `MICROSOFT_FOUNDRY_AGENT_NAME` をそちらに切り替えてください。
 
 ---
 
@@ -570,18 +463,7 @@ az account show --query tenantId -o tsv
 # AZURE_TENANT_ID="<上記の値>"
 
 # 必要なら正しいテナントで再ログイン
-az login --tenant <TENANT-ID>
-```
-
-### エラー: `status: "failed"` / `An internal server error occurred.`
-
-**原因**: `agent-framework-foundry-hosting` パッケージのバグ。空の options が渡されてエージェントがハングする。
-
-**解決方法**:
-```powershell
-python scripts/patch_responses.py
-# サーバーを Ctrl+C で停止して再起動
-python src/agent_x/main.py
+az login --tenant <YOUR-TENANT-ID> --scope "https://ai.azure.com/.default"
 ```
 
 ### エラー: `Invoke-WebRequest` でタイムアウト
@@ -604,7 +486,7 @@ python src/agent_x/main.py
 
 **原因**: `az ai` 拡張機能が現時点 (2026/05) では公開停止 / 動的インストール対象外となっており、`az config set extension.dynamic_install_allow_preview=true` を実行しても解消しません。
 
-**解決方法**: CLI ではなく [Azure AI Foundry ポータル](https://ai.azure.com/) からプロジェクトを作成してください。手順は [演習 0.4](#04-foundry-プロジェクトの作成-azure-ai-foundry-ポータルから作成) を参照。
+**解決方法**: CLI ではなく [Microsoft Foundry ポータル](https://ai.azure.com/) から Foundry リソースとプロジェクトを作成してください。手順は [演習 0.3](#03-foundry-リソースとプロジェクトの作成-microsoft-foundry-ポータルから作成) を参照。
 
 ### エラー: `ModuleNotFoundError: No module named 'agent_framework'`
 
