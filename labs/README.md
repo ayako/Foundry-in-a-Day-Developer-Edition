@@ -4,9 +4,9 @@
 
 | # | タイトル | 所要 | 担当 | リンク |
 |---|---|---|---|---|
-| 1 | Build Agents with Foundry SDK & Microsoft Agent Framework | 〜105分 | TBD | [lab1-sdk-and-agent-framework](lab1-sdk-and-agent-framework/README.md) |
-| 2 | Hosted Agent へのデプロイ | 〜45分 | TBD | [lab2-hosted-agent-deploy](lab2-hosted-agent-deploy/README.md) |
-| 3 | 作ったエージェントの評価 | 〜45分 | TBD | [lab3-evaluation](lab3-evaluation/README.md) |
+| 1 | Build Agents with Foundry SDK & Microsoft Agent Framework | 草野 | [lab1-sdk-and-agent-framework](lab1-sdk-and-agent-framework/README.md) |
+| 2 | Hosted Agent へのデプロイ | 畑崎 | [lab2-hosted-agent-deploy](lab2-hosted-agent-deploy/README.md) |
+| 3 | 作ったエージェントの評価 | 棚橋 | [lab3-evaluation](lab3-evaluation/README.md) |
 
 ---
 
